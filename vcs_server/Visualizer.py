@@ -59,6 +59,13 @@ class Visualizer(protocols.vtkWebProtocol):
         self._canvas[windowId] = canvas
         return [windowId]
 
+    @exportRpc('vcs.canvas.state.dump')
+    def dumpCanvasState(self, windowId):
+        if windowId in self._canvas:
+            self._canvas[windowId].dumpRendererState()
+        else:
+            print('I do not know about any such windowId: %d' % windowId)
+
     @exportRpc('vcs.canvas.clear')
     def clear(self, windowId):
         if windowId in self._canvas:

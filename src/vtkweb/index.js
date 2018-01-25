@@ -133,6 +133,14 @@ const backend = {
       });
     });
   },
+  dumpState(canvas) {
+    if (!canvas.windowId) {
+      return Promise.resolve(false);
+    }
+    return canvas.connection.vtkweb.then((client) => {
+      return client.pvw.session.call('vcs.canvas.state.dump', [canvas.windowId]);
+    });
+  },
 };
 
 export { backend as default };

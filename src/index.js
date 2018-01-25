@@ -100,6 +100,10 @@ function init(el, renderingType) {
       return this.backend.resize(this, newWidth, newHeight);
     },
 
+    dumpState() {
+      return this.backend.dumpState(this);
+    },
+
     close() {
       Object.keys(this.connection).map((k) => {
         return this.connection[k].then((c) => {

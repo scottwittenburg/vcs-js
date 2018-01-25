@@ -13,6 +13,11 @@ function vcs_boxfill_clear()
   canvas.clear();
 }
 
+function vcs_canvas_dump()
+{
+  canvas.dumpState();
+}
+
 function vcs_plot_mycolormap(evt) {
   function applyMagmaColorsToMyMap(colorMapNotUsed) {
     vcs.getcolormap('magma').then((magmaCm) => {

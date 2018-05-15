@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import b64toBlob from 'b64-to-blob';
 import remoteRenderer from './RemoteRenderer';
 import vtkweb from './vtkweb';
 import plotly from './plotly';
@@ -193,6 +194,36 @@ function removegraphicsmethod(typeName, name) {
     });
 }
 
+function tryBinaryRead(filename) {
+  const { connection } = connect('server');
+  return connection.vtkweb
+    .then((client) => {
+      return client.pvw.session.call('vcs.return.file.base64', [filename]);
+    });
+}
+
+function saveBase64AsFile(b64Data, type) {
+  const typeMap = {
+    ps: 'application/postscript',
+    pdf: 'application/pdf',
+    png: 'image/png',
+    svg: 'image/svg+xml',
+  };
+
+  const blob = b64toBlob(b64Data, typeMap[type]);
+  console.log('Here is the blob:')
+  console.log(blob);
+
+  var blobUrl = URL.createObjectURL(blob);
+
+  var link = document.createElement("a");
+  link.href = blobUrl;
+  const fname = `image.${type}`
+  link.download = fname;
+  link.innerHTML = `Click here to download ${fname}`;
+  document.body.appendChild(link);
+}
+
 
 export {
   init,
@@ -213,4 +244,6 @@ export {
   setgraphicsmethod,
   creategraphicsmethod,
   removegraphicsmethod,
+  tryBinaryRead,
+  saveBase64AsFile,
 };

@@ -1,6 +1,7 @@
 """This module exposes methods for finding and creating visualizations."""
 
 import json
+import base64
 from wslink import register as exportRpc
 # import vtk modules.
 import vtk
@@ -176,3 +177,11 @@ class Visualizer(protocols.vtkWebProtocol):
     def setgraphicsmethod(self, typeName, name, nameValueMap):
         gm = vcs.getgraphicsmethod(typeName, name)
         updateGraphicsMethodProps(nameValueMap, gm)
+
+    @exportRpc('vcs.return.file.base64')
+    def getBinaryFileAsBase64(self, filename):
+        with open(filename, 'rb') as f:
+            data = f.read()
+
+        encodedData = base64.b64encode(data)
+        return encodedData

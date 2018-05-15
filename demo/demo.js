@@ -105,6 +105,46 @@ function vcsBoxfillResize() {
   console.log('div resize');
 }
 
+function readBinaryFiles() {
+  const pathList = [
+    {
+      type: 'png',
+      path: '/Users/scott/projects/uvcdat/examples/boxfill_single.png',
+    }, {
+      type: 'ps',
+      path: '/Users/scott/projects/uvcdat/examples/boxfill_single.ps',
+    }, {
+      type: 'pdf',
+      path: '/Users/scott/projects/uvcdat/examples/boxfill_single.pdf',
+    }, {
+      type: 'svg',
+      path: '/Users/scott/projects/uvcdat/examples/boxfill_single.svg',
+    },
+  ];
+
+  function getNext() {
+     const next = pathList.shift();
+    if (next) {
+      const { type, path } = next
+      vcs.tryBinaryRead(path).then(
+        (b64txt) => {
+          console.log(`Received ${type}:`)
+          console.log(b64txt);
+          vcs.saveBase64AsFile(b64txt, type);
+          getNext();
+        }, (b64err) => {
+          console.log(`${type} whoops:`);
+          console.log(b64err);
+          getNext();
+        });
+    } else {
+      console.log('Done reading binary files');
+    }
+  }
+
+  getNext();
+}
+
 /**
  * Prints the result from get_variables to the console.
  * @param {string? filename An absolute path to a netcdf file
